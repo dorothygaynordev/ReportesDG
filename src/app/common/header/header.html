@@ -1,0 +1,55 @@
+<header
+  class="w-full fixed top-0 left-0 z-30 h-14 flex items-center bg-white dark:bg-gray-800"
+>
+  @if (!sidebarService.isMobile()) {
+    <div class="w-64 flex-shrink-0 flex items-center h-full px-4 gap-1">
+      <img src="/images/logo.png" alt="Logo" class="h-11" />
+      <span
+        class="font-bold dark:text-white relative ltr:ml-[8px] rtl:mr-[8px] top-px text-xl"
+      >
+        Reportes DG
+      </span>
+    </div>
+  }
+  <div class="flex flex-1 justify-between items-center px-4">
+    <button
+      class="transition-all hover:text-primary-500 flex items-center cursor-pointer"
+      (click)="toggleSidebar.emit()"
+    >
+      <i class="material-symbols-outlined !text-2xl"> menu_open </i>
+    </button>
+    <div class="flex items-center gap-3 relative">
+      <button
+        class="transition-all hover:text-primary-500 flex items-center cursor-pointer"
+        (click)="fullScreenService.toggle()"
+      >
+        <i class="material-symbols-outlined !text-[22px]">
+          {{
+            fullScreenService.isFullscreen() ? "fullscreen_exit" : "fullscreen"
+          }}
+        </i>
+      </button>
+      <div class="relative inline-block">
+        <button
+          class="flex items-center gap-1 dark:text-white cursor-pointer"
+          (click)="menu.toggle($event)"
+        >
+          <i class="material-symbols-outlined !text-[26px]">account_circle</i>
+          <span class="block font-semibold text-[0] lg:text-base">{{
+            username()
+          }}</span>
+          <i class="material-symbols-outlined text-[15px]"
+            >keyboard_arrow_down
+          </i>
+        </button>
+        <p-menu
+          #menu
+          [model]="items()"
+          [popup]="true"
+          appendTo="body"
+          styleClass="w-55 min-w-55"
+        ></p-menu>
+      </div>
+    </div>
+  </div>
+</header>

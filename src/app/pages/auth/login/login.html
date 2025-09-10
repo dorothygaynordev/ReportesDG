@@ -1,0 +1,61 @@
+<form [formGroup]="loginForm" (submit)="onSubmit()">
+  <div>
+    <label
+      for="usuario"
+      class="block mb-2 text-sm text-gray-600 dark:text-gray-200"
+    >
+      Email
+    </label>
+    <p-iconfield>
+      <p-inputicon class="pi pi-user" />
+      <input
+        class="w-full"
+        pInputText
+        placeholder="Email"
+        id="usuario"
+        formControlName="email"
+      />
+    </p-iconfield>
+  </div>
+
+  <div class="mt-6">
+    <div class="flex justify-between mb-2">
+      <label for="password" class="text-sm text-gray-600 dark:text-gray-200"
+        >Contraseña</label
+      >
+      <a
+        href="#"
+        class="text-sm text-gray-400 hover:text-black hover:underline invisible"
+      >
+        Olvidé mi contraseña!
+      </a>
+    </div>
+    <p-iconfield>
+      <p-inputicon
+        [ngClass]="{
+          'pi-lock': !showPassword,
+          'pi-lock-open': showPassword,
+        }"
+        (click)="togglePassword()"
+        class="pi cursor-pointer"
+      ></p-inputicon>
+      <input
+        pInputText
+        class="w-full"
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder="Contraseña"
+        id="password"
+        formControlName="password"
+      />
+    </p-iconfield>
+  </div>
+
+  <div class="mt-6">
+    <p-button
+      styleClass="w-full"
+      label="Ingresar"
+      type="submit"
+      [disabled]="!loginForm.valid"
+    />
+  </div>
+</form>

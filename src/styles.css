@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+@import "material-symbols/outlined.css";
+
+:root {
+  font-family: "Inter", sans-serif;
+}
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: "InterVariable", sans-serif;
+    font-optical-sizing: auto;
+  }
+}
+
+/* Si el input es inválido, pinta el icono rojo */
+p-iconfield input:invalid + p-inputicon {
+  color: var(--p-error-color) !important;
+}
+
+@theme {
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  @apply bg-gray-100;
+}
+
+.sidebar-menu-btn {
+  @apply flex items-center gap-2 transition-all py-2 pl-3.5 rounded-md font-[600] text-[.875em] text-zinc-800 w-full relative hover:bg-gray-100 text-left dark:hover:bg-[#15203c];
+}
+
+.sidebar-menu-btn.active {
+  @apply bg-zinc-900 dark:bg-[#15203c] text-white font-medium;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 48;
+}

@@ -1,0 +1,76 @@
+<!-- Overlay solo en móvil -->
+@if (sidebarService.sidebarVisible() && sidebarService.isMobile()) {
+  <div
+    class="fixed inset-0 bg-black/50 z-40"
+    tabindex="0"
+    (click)="sidebarService.closeSidebar()"
+    (keydown.enter)="sidebarService.closeSidebar()"
+    (keydown.space)="sidebarService.closeSidebar()"
+    aria-label="Cerrar sidebar"
+  ></div>
+}
+
+<!-- Sidebar -->
+<aside
+  class="fixed top-0 left-0 h-full w-64 z-50 transform transition-all duration-300 ease-in-out"
+  [class.-translate-x-full]="
+    !sidebarService.sidebarVisible() && sidebarService.isMobile()
+  "
+  [class.translate-x-0]="
+    sidebarService.sidebarVisible() && sidebarService.isMobile()
+  "
+  [class.lg:translate-x-0]="!sidebarService.isMobile()"
+  [class.-ml-64]="
+    !sidebarService.sidebarVisible() && !sidebarService.isMobile()
+  "
+>
+  <div
+    class="flex justify-between h-14"
+    [class.bg-white]="sidebarService.isMobile()"
+  >
+    @if (sidebarService.isMobile()) {
+      <div class="flex items-center px-4 gap-1">
+        <img src="/images/logo.png" alt="Logo" class="h-11" />
+        <span
+          class="font-bold text-black dark:text-white relative ltr:ml-[8px] rtl:mr-[8px] top-px text-xl"
+        >
+          Reportes DG
+        </span>
+      </div>
+    }
+  </div>
+  <ng-scrollbar visibility="hover" class="!h-screen bg-white">
+    <!-- header space -->
+    <div class="pt-3 px-[25px] pb-[20px]">
+      <div class="accordion">
+        <span
+          class="block font-medium uppercase text-gray-400 mb-[10px] mt-3 text-xs"
+        >
+          Reportes
+        </span>
+        <div class="flex flex-col gap-1 w-full">
+          <a
+            routerLink="/reportes/faltas"
+            routerLinkActive="active"
+            class="sidebar-menu-btn"
+          >
+            <i class="material-symbols-outlined !text-[20px]"
+              >assignment_late</i
+            >
+            <span>Faltas Recurrentes</span>
+          </a>
+          <a
+            routerLink="/asistencias"
+            routerLinkActive="active"
+            class="sidebar-menu-btn"
+          >
+            <i class="material-symbols-outlined !text-[20px]"
+              >assignment_turned_in</i
+            >
+            <span>Reporte Asistencias</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </ng-scrollbar>
+</aside>
