@@ -1,0 +1,11 @@
+<app-header />
+<app-sidebar />
+<main
+  class="pt-[72px] pl-2 pr-2 transition-all duration-300 ease-in-out"
+  [ngClass]="{
+    'md:ml-[232px]':
+      sidebarService.sidebarVisible() && !sidebarService.isMobile(),
+  }"
+>
+  <router-outlet></router-outlet>
+</main>

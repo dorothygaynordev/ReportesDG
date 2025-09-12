@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
+import { MainLayout } from '@app/layouts/main/main-layout';
 import { authGuard } from '@core/auth/services/auth.guard';
 import { AuthLayout } from '@layouts/auth-layout';
-import { MainLayout } from '@layouts/main-layout';
 import { Login } from '@pages/auth/login/login';
 import { Faltas } from '@pages/faltas/faltas';
 

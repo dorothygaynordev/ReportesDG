@@ -1,54 +1,64 @@
 <header
-  class="w-full fixed top-0 left-0 z-30 h-14 flex items-center bg-white dark:bg-gray-800"
+  class="py-2 px-4 bg-gray-100 fixed top-0 left-0 right-0 z-40 transition-all duration-300 ease-in-out"
+  [ngClass]="{
+    'md:ml-[232px]':
+      sidebarService.sidebarVisible() && !sidebarService.isMobile(),
+  }"
 >
-  @if (!sidebarService.isMobile()) {
-    <div class="w-64 flex-shrink-0 flex items-center h-full px-4 gap-1">
-      <img src="/images/logo.png" alt="Logo" class="h-11" />
-      <span
-        class="font-bold dark:text-white relative ltr:ml-[8px] rtl:mr-[8px] top-px text-xl"
-      >
-        Reportes DG
-      </span>
-    </div>
-  }
-  <div class="flex flex-1 justify-between items-center px-4">
-    <button
-      class="transition-all hover:text-primary-500 flex items-center cursor-pointer"
-      (click)="toggleSidebar.emit()"
-    >
-      <i class="material-symbols-outlined !text-2xl"> menu_open </i>
-    </button>
-    <div class="flex items-center gap-3 relative">
+  <div
+    class="h-14 rounded-lg flex items-center justify-between bg-white border border-slate-100"
+  >
+    <app-breadcrum />
+    <div class="flex items-center gap-4 mx-4">
       <button
-        class="transition-all hover:text-primary-500 flex items-center cursor-pointer"
-        (click)="fullScreenService.toggle()"
+        class="transition-all text-gray-500 flex items-center cursor-pointer"
+        (click)="sidebarService.toggleSidebar()"
       >
-        <i class="material-symbols-outlined !text-[22px]">
+        <i class="material-symbols-rounded !text-[22px]">menu</i>
+      </button>
+      <button
+        class="transition-all text-gray-500 flex items-center cursor-pointer"
+        (click)="fullscreenService.toggle()"
+      >
+        <i class="material-symbols-rounded !text-[21px] pe-">
           {{
-            fullScreenService.isFullscreen() ? "fullscreen_exit" : "fullscreen"
+            fullscreenService.isFullscreen() ? "fullscreen_exit" : "fullscreen"
           }}
         </i>
       </button>
-      <div class="relative inline-block">
+      <div
+        class="relative inline-block"
+        appClickOutside
+        (clickOutside)="menuOpen.set(false)"
+      >
         <button
-          class="flex items-center gap-1 dark:text-white cursor-pointer"
-          (click)="menu.toggle($event)"
+          class="text-gray-500 flex items-center cursor-pointer"
+          (click)="toggleMenu()"
         >
-          <i class="material-symbols-outlined !text-[26px]">account_circle</i>
-          <span class="block font-semibold text-[0] lg:text-base">{{
-            username()
-          }}</span>
-          <i class="material-symbols-outlined text-[15px]"
-            >keyboard_arrow_down
-          </i>
+          <i class="material-symbols-rounded !text-[22px]">account_circle</i>
         </button>
-        <p-menu
-          #menu
-          [model]="items()"
-          [popup]="true"
-          appendTo="body"
-          styleClass="w-55 min-w-55"
-        ></p-menu>
+        @if (menuOpen()) {
+          <div
+            class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-10"
+          >
+            <div class="px-4 py-3">
+              <p class="text-sm text-gray-300 font-semibold">Logueado como</p>
+              <p class="text-sm font-medium text-zinc-700 truncate">
+                {{ username() }}
+              </p>
+            </div>
+            <div class="py-1">
+              <a
+                class="flex items-center gap-1 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mx-1 font-medium cursor-pointer rounded-lg"
+                href="#"
+                (click)="logout($event)"
+              >
+                <i class="material-symbols-rounded opacity-50">logout</i>
+                Cerrar sesión
+              </a>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>

@@ -1,13 +1,15 @@
+import { NgClass } from '@angular/common';
 import {
   Component,
   computed,
-  EventEmitter,
   inject,
-  Output,
+  Input,
   signal,
+  Signal,
 } from '@angular/core';
+import { ClickOutside } from '@app/core/directives/click-outside';
+import { Breadcrum } from '@common/breadcrum/breadcrum';
 import { AuthService } from '@core/auth/services/auth.service';
-import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -26,36 +28,27 @@ import { FullScreenService } from './fullscreen.service';
     InputGroupAddonModule,
     StyleClassModule,
     MenuModule,
+    Breadcrum,
+    ClickOutside,
+    NgClass,
   ],
   templateUrl: './header.html',
 })
 export class Header {
-  @Output() toggleSidebar = new EventEmitter<void>();
+  @Input() scrolled!: boolean | Signal<boolean>;
+  // Services
   public sidebarService = inject(SidebarService);
-  public fullScreenService = inject(FullScreenService);
+  public fullscreenService = inject(FullScreenService);
   private authService = inject(AuthService);
+
   public currentUser = this.authService.currentUser;
-  public username = computed(() => this.currentUser()?.userName ?? 'Invitado');
-  items = signal<MenuItem[]>([]);
+  public username = computed(() => this.currentUser()?.email ?? 'Invitado');
+  public menuOpen = signal(false);
 
-  constructor() {
-    this.items.set([
-      {
-        label: 'Opciones',
-        items: [
-          {
-            label: 'Cerrar sesión',
-            icon: 'pi pi-power-off',
-            command: () => {
-              this.logout();
-            },
-          },
-        ],
-      },
-    ]);
-  }
-
-  logout() {
+  logout(event: Event) {
+    event.preventDefault();
     this.authService.logout();
   }
+
+  toggleMenu = () => this.menuOpen.update((open) => !open);
 }

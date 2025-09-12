@@ -10,67 +10,75 @@
   ></div>
 }
 
-<!-- Sidebar -->
 <aside
-  class="fixed top-0 left-0 h-full w-64 z-50 transform transition-all duration-300 ease-in-out"
-  [class.-translate-x-full]="
-    !sidebarService.sidebarVisible() && sidebarService.isMobile()
-  "
-  [class.translate-x-0]="
-    sidebarService.sidebarVisible() && sidebarService.isMobile()
-  "
-  [class.lg:translate-x-0]="!sidebarService.isMobile()"
-  [class.-ml-64]="
-    !sidebarService.sidebarVisible() && !sidebarService.isMobile()
-  "
+  class="fixed top-0 md:top-2 bottom-0 md:bottom-2 left-0 md:left-2 bg-zinc-800 shadow-xs rounded-none md:rounded-lg w-56 border border-zinc-900 flex flex-col z-50 transition-all duration-300 ease-in-out"
+  [ngClass]="{
+    '-translate-x-full':
+      !sidebarService.sidebarVisible() && sidebarService.isMobile(),
+    'translate-x-0':
+      sidebarService.sidebarVisible() && sidebarService.isMobile(),
+    'md:-translate-x-[232px]':
+      !sidebarService.sidebarVisible() && !sidebarService.isMobile(),
+    'md:translate-x-0':
+      sidebarService.sidebarVisible() && !sidebarService.isMobile(),
+  }"
 >
-  <div
-    class="flex justify-between h-14"
-    [class.bg-white]="sidebarService.isMobile()"
-  >
-    @if (sidebarService.isMobile()) {
-      <div class="flex items-center px-4 gap-1">
-        <img src="/images/logo.png" alt="Logo" class="h-11" />
-        <span
-          class="font-bold text-black dark:text-white relative ltr:ml-[8px] rtl:mr-[8px] top-px text-xl"
-        >
-          Reportes DG
-        </span>
-      </div>
+  <!-- Logo -->
+  <div class="h-14 px-4 flex items-center justify-between">
+    <a class="flex items-center gap-3 cursor-pointer">
+      <img
+        src="/images/logo_white.png"
+        class="max-h-10 max-w-full"
+        alt="main_logo"
+      />
+      <span class="text-md text-white font-semibold">Reportes DG</span>
+    </a>
+    @if (sidebarService.sidebarVisible() && sidebarService.isMobile()) {
+      <button
+        class="text-zinc-400 flex items-center cursor-pointer hover:text-white transition-colors"
+        (click)="sidebarService.toggleSidebar()"
+      >
+        <i class="material-symbols-rounded !text-2xl">menu_open</i>
+      </button>
     }
   </div>
-  <ng-scrollbar visibility="hover" class="!h-screen bg-white">
-    <!-- header space -->
-    <div class="pt-3 px-[25px] pb-[20px]">
-      <div class="accordion">
-        <span
-          class="block font-medium uppercase text-gray-400 mb-[10px] mt-3 text-xs"
+  <hr
+    class="w-full h-px border-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 mb-2"
+  />
+  <!-- Menu -->
+  <div class="flex-1 overflow-y-auto">
+    <ul class="flex flex-col pl-0 mb-0 list-none">
+      <li class="mt-0.5">
+        <a
+          class="sidebar-menu-btn"
+          routerLink="/reportes/faltas"
+          routerLinkActive="active"
         >
-          Reportes
-        </span>
-        <div class="flex flex-col gap-1 w-full">
-          <a
-            routerLink="/reportes/faltas"
-            routerLinkActive="active"
-            class="sidebar-menu-btn"
+          <i class="material-symbols-rounded icon-menu-btn">assignment_late</i>
+          <span>Faltas recurrentes</span>
+        </a>
+      </li>
+      <li class="mt-0.5">
+        <a
+          class="sidebar-menu-btn"
+          outerLink="/asistencias"
+          routerLinkActive="active"
+        >
+          <i class="material-symbols-rounded icon-menu-btn"
+            >assignment_turned_in</i
           >
-            <i class="material-symbols-outlined !text-[20px]"
-              >assignment_late</i
-            >
-            <span>Faltas Recurrentes</span>
-          </a>
-          <a
-            routerLink="/asistencias"
-            routerLinkActive="active"
-            class="sidebar-menu-btn"
-          >
-            <i class="material-symbols-outlined !text-[20px]"
-              >assignment_turned_in</i
-            >
-            <span>Reporte Asistencias</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </ng-scrollbar>
+          <span>Reporte asistencias</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr
+    class="w-full h-px border-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 mt-2"
+  />
+  <!-- Footer -->
+  <div class="h-12 flex items-center justify-center">
+    <a class="text-[#BC8246]">
+      <span class="text-sm">© Dorothy Gaynor</span>
+    </a>
+  </div>
 </aside>

@@ -4,31 +4,30 @@ import { computed, Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SidebarService {
-  private readonly _visible = signal(true); // en escritorio por defecto visible
-  private readonly _mobile = signal(window.innerWidth < 1024);
+  private readonly visible = signal(true);
+  private readonly mobile = signal(window.innerWidth < 768);
 
-  public sidebarVisible = computed(() => this._visible());
-  public isMobile = computed(() => this._mobile());
+  public sidebarVisible = computed(() => this.visible());
+  public isMobile = computed(() => this.mobile());
 
   constructor() {
     window.addEventListener('resize', () => {
-      const mobile = window.innerWidth < 1024;
-      this._mobile.set(mobile);
+      const mobile = window.innerWidth < 768;
+      this.mobile.set(mobile);
 
-      // si cambia a escritorio, sidebar siempre visible
       if (!mobile) {
-        this._visible.set(true);
+        this.visible.set(true);
       } else {
-        this._visible.set(false);
+        this.visible.set(false);
       }
     });
   }
 
   toggleSidebar() {
-    this._visible.update((v) => !v);
+    this.visible.update((view) => !view);
   }
 
   closeSidebar() {
-    this._visible.set(false);
+    this.visible.set(false);
   }
 }

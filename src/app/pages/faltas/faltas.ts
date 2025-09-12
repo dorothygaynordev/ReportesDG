@@ -1,13 +1,15 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
 import { FaltasService } from './faltas.service';
 import { EmpleadoFaltas } from './models/empleado-faltas';
 
 @Component({
   selector: 'app-faltas',
-  imports: [CardModule, ButtonModule, TableModule],
+  imports: [CardModule, ButtonModule, TableModule, ListboxModule, DatePipe],
   templateUrl: './faltas.html',
 })
 export class Faltas implements OnInit {
