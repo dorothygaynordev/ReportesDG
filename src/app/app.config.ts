@@ -13,7 +13,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { authInterceptor } from '@core/auth/services/auth.interceptor';
+import { authInterceptor } from '@app/core/interceptors/auth.interceptor';
 import { SettingsService } from '@core/services/settings.service';
 import { MyPreset } from '@theme/theme';
 import { providePrimeNG } from 'primeng/config';

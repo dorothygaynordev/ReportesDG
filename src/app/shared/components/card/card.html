@@ -1,0 +1,33 @@
+<div
+  class="w-full bg-white border border-gray-200 rounded-lg shadow-xs dark:bg-gray-800 dark:border-gray-700 flex flex-col"
+  [ngClass]="cardClass()"
+>
+  @if (title()) {
+    <div
+      class="flex items-center justify-between px-4 py-3 rounded-tl-lg rounded-tr-lg"
+    >
+      <h2 class="text-lg font-semibold">{{ title() }}</h2>
+    </div>
+  }
+
+  <!-- Siempre proyectar header si existe -->
+  <ng-content select="[card-header]"></ng-content>
+
+  <!-- Contenido -->
+  <div class="flex-1 overflow-auto">
+    <ng-content select="[card-content]"></ng-content>
+  </div>
+
+  <!-- Footer -->
+  @if (footerText()) {
+    <div class="relative">
+      <hr
+        class="h-px border-0 bg-gradient-to-r from-transparent via-gray-600/15 to-transparent"
+      />
+      <div class="px-4 py-3 flex justify-end gap-2 rounded-bl-lg rounded-br-lg">
+        <span class="text-sm text-gray-400">{{ footerText() }}</span>
+      </div>
+    </div>
+  }
+  <ng-content select="[card-footer]"></ng-content>
+</div>

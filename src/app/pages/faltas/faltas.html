@@ -1,44 +1,52 @@
-<p-card class="w-full hidden">
-  <p-table
-    [value]="listFaltas"
-    stripedRows="true"
-    class="transition-all duration-300"
+<app-card>
+  <div
+    class="flex items-center justify-between p-4 border-b border-b-gray-200"
+    card-header
   >
-    <ng-template #caption>
-      <div class="flex items-center justify-between">
-        <span class="text-xl leading-normal font-bold">Faltas Tiendas</span>
-        <p-button label="Exportar" size="small">
-          <ng-template pTemplate="icon">
-            <i class="material-symbols-outlined !text-[20px]">file_export</i>
-          </ng-template>
-        </p-button>
-      </div>
-    </ng-template>
-    <ng-template #header>
-      <tr>
-        <th>No. Empleado</th>
-        <th>Nombre</th>
-        <th>Tienda</th>
-        <th>Faltas</th>
-        <th>Días de falta</th>
-      </tr>
-    </ng-template>
-    <ng-template #body let-falta>
-      <tr class="text-xs">
-        <td class="!py-2">{{ falta.cedula }}</td>
-        <td class="!py-2">{{ falta.nombre }}</td>
-        <td class="!py-2">{{ falta.claveTienda }}</td>
-        <td class="!py-2">{{ falta.total }}</td>
-        <td class="!py-2">
-          <ul class="max-h-14 overflow-y-auto">
-            @for (fecha of falta.faltas; track fecha.index) {
-              <li class="py-0.5">
-                {{ fecha | date: "dd/MM/yyyy" }}
-              </li>
-            }
-          </ul>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</p-card>
+    <h2 class="text-lg font-semibold">Faltas recurrentes</h2>
+    <p-button label="Exportar" size="small">
+      <ng-template pTemplate="icon">
+        <i class="material-symbols-outlined !text-[20px]">file_export</i>
+      </ng-template>
+    </p-button>
+  </div>
+  <div card-content>
+    <!-- <ng-scrollbar class="rounded-b-lg overflow-hidden h-[calc(100vh-157px)]"> -->
+    <div class="rounded-b-lg overflow-hidden">
+      <p-table
+        [value]="listFaltas"
+        stripedRows="true"
+        [scrollable]="true"
+        scrollHeight="calc(100vh - 150px)"
+      >
+        <ng-template #header>
+          <tr class="text-md sticky top-0 z-10">
+            <th>No. Empleado</th>
+            <th>Nombre</th>
+            <th>Tienda</th>
+            <th>Faltas</th>
+            <th>Días de falta</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-falta>
+          <tr class="text-xs">
+            <td class="!py-2">{{ falta.cedula }}</td>
+            <td class="!py-2">{{ falta.nombre }}</td>
+            <td class="!py-2">{{ falta.claveTienda }}</td>
+            <td class="!py-2">{{ falta.total }}</td>
+            <td class="!py-2">
+              <ul class="max-h-16 overflow-y-auto styled-scrollbar">
+                @for (fecha of falta.faltas; track fecha.key) {
+                  <li class="py-0.5">
+                    {{ fecha.fechaFalta }}
+                  </li>
+                }
+              </ul>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <!-- </ng-scrollbar> -->
+  </div>
+</app-card>

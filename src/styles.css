@@ -32,3 +32,31 @@ body {
 .sidebar-menu-btn.active {
   @apply bg-[#BC8246] dark:bg-[#15203c] text-white;
 }
+
+@layer utilities {
+  .styled-scrollbar {
+    @apply overflow-y-auto; /* mantiene scroll vertical */
+
+    /* Scrollbar para Chrome/Edge/Safari */
+    &::-webkit-scrollbar {
+      @apply w-1.5; /* ancho 6px */
+    }
+
+    &::-webkit-scrollbar-track {
+      @apply bg-transparent rounded-full;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      @apply bg-gray-400 rounded-full border-2 border-transparent;
+      background-clip: content-box; /* necesario para border */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      @apply bg-gray-500;
+    }
+
+    /* Scrollbar para Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af transparent; /* gray-400 */
+  }
+}

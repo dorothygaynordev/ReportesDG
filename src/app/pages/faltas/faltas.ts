@@ -1,5 +1,6 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { AppCard } from '@shared/components/card/card';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ListboxModule } from 'primeng/listbox';
@@ -9,7 +10,14 @@ import { EmpleadoFaltas } from './models/empleado-faltas';
 
 @Component({
   selector: 'app-faltas',
-  imports: [CardModule, ButtonModule, TableModule, ListboxModule, DatePipe],
+  imports: [
+    CardModule,
+    ButtonModule,
+    TableModule,
+    ListboxModule,
+    AppCard,
+    NgScrollbarModule,
+  ],
   templateUrl: './faltas.html',
 })
 export class Faltas implements OnInit {
@@ -21,7 +29,6 @@ export class Faltas implements OnInit {
     this.faltasService.getFaltas().subscribe({
       next: (response) => {
         if (response.success) {
-          console.log('Faltas fetched successfully', response);
           this.listFaltas = response.data;
           this.cdr.detectChanges();
         } else {

@@ -8,7 +8,7 @@ import {
   Signal,
 } from '@angular/core';
 import { ClickOutside } from '@app/core/directives/click-outside';
-import { Breadcrum } from '@common/breadcrum/breadcrum';
+import { Breadcrumb } from '@common/breadcrumb/breadcrumb';
 import { AuthService } from '@core/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -28,7 +28,7 @@ import { FullScreenService } from './fullscreen.service';
     InputGroupAddonModule,
     StyleClassModule,
     MenuModule,
-    Breadcrum,
+    Breadcrumb,
     ClickOutside,
     NgClass,
   ],
