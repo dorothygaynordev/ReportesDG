@@ -4,7 +4,7 @@
     card-header
   >
     <h2 class="text-lg font-semibold">Faltas recurrentes</h2>
-    <p-button label="Exportar" size="small">
+    <p-button label="Exportar" size="small" (onClick)="exportExcel()">
       <ng-template pTemplate="icon">
         <i class="material-symbols-outlined !text-[20px]">file_export</i>
       </ng-template>
