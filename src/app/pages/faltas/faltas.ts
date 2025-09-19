@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AppCard } from '@shared/components/card/card';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
+import { catchError, map, of } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { FaltasService } from './faltas.service';
 import { EmpleadoFaltas } from './models/empleado-faltas';
@@ -21,44 +23,22 @@ import { EmpleadoFaltas } from './models/empleado-faltas';
   ],
   templateUrl: './faltas.html',
 })
-export class Faltas implements OnInit {
+export class Faltas {
   private faltasService = inject(FaltasService);
-  private cdr = inject(ChangeDetectorRef);
-  public listFaltas: EmpleadoFaltas[] = [];
 
-  ngOnInit(): void {
-    this.faltasService.getFaltas().subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.listFaltas = response.data;
-          this.cdr.detectChanges();
-        } else {
-          console.error('Failed to fetch faltas:', response.message);
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching faltas:', error.message);
-      },
-    });
-  }
-  // faltas = toSignal(
-  //   this.faltasService.getFaltas().pipe(
-  //     map((res) => {
-  //       if (res.success) {
-  //         console.log('Faltas fetched successfully', res);
-  //         return res.data;
-  //       }
-  //       return [];
-  //     }),
-  //     catchError(() => {
-  //       console.log('Error fetching faltas');
-  //       return [];
-  //     }),
-  //   ),
-  // );
+  public listFaltas: Signal<EmpleadoFaltas[]> = toSignal(
+    this.faltasService.getFaltas().pipe(
+      map((response) => (response.success ? response.data : [])),
+      catchError((err) => {
+        console.log('Error al obtener faltas:', err);
+        return of([]);
+      }),
+    ),
+    { initialValue: [] },
+  );
 
   exportExcel() {
-    const excel = this.listFaltas.map((falta) => ({
+    const excel = this.listFaltas().map((falta) => ({
       'Número de empleado': falta.cedula,
       Nombre: falta.nombre,
       Tienda: falta.claveTienda,

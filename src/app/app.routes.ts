@@ -29,6 +29,12 @@ export const routes: Routes = [
           import('@pages/faltas/faltas').then((m) => m.Faltas),
         data: { breadcrumb: 'Faltas recurrentes' },
       },
+      {
+        path: 'ventas-cfe',
+        loadComponent: () =>
+          import('@pages/ventas-cfe/ventas-cfe').then((m) => m.VentasCfe),
+        data: { breadcrumb: 'Ventas CFE' },
+      },
     ],
   },
   { path: '**', redirectTo: 'auth' },

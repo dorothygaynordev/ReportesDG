@@ -12,18 +12,17 @@ export class AuthService {
   private settings = inject(SettingsService);
   private router = inject(Router);
 
+  constructor() {
+    this.loadUserFromToken();
+  }
+
   private get tokenKey() {
     return this.settings.token;
   }
 
   saveToken(token: string) {
     localStorage.setItem(this.tokenKey, token);
-
-    const user = this.decodeToken(token);
-    if (user) {
-      this.currentUser.set(user);
-      this.isLoggedIn.set(true);
-    }
+    this.loadUserFromToken();
   }
 
   getToken(): string | null {
@@ -61,6 +60,38 @@ export class AuthService {
       } as User;
     } catch {
       console.error('Invalid token');
+      return null;
+    }
+  }
+
+  public loadUserFromToken() {
+    const token = this.getToken();
+    if (!token) {
+      this.currentUser.set(null);
+      this.isLoggedIn.set(false);
+      return;
+    }
+
+    const user = this.decodeToken(token);
+    if (user) {
+      this.currentUser.set(user);
+      this.isLoggedIn.set(true);
+    } else {
+      this.currentUser.set(null);
+      this.isLoggedIn.set(false);
+    }
+  }
+
+  async getUsername() {
+    const token = await this.getToken();
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.email ?? null;
+    } catch {
       return null;
     }
   }

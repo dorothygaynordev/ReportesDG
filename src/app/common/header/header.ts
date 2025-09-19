@@ -1,12 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  Input,
-  signal,
-  Signal,
-} from '@angular/core';
+import { Component, inject, Input, signal, Signal } from '@angular/core';
 import { ClickOutside } from '@app/core/directives/click-outside';
 import { Breadcrumb } from '@common/breadcrumb/breadcrumb';
 import { AuthService } from '@core/auth/services/auth.service';
@@ -40,14 +33,21 @@ export class Header {
   public sidebarService = inject(SidebarService);
   public fullscreenService = inject(FullScreenService);
   private authService = inject(AuthService);
-
-  public currentUser = this.authService.currentUser;
-  public username = computed(() => this.currentUser()?.email ?? 'Invitado');
   public menuOpen = signal(false);
+  public username = signal('Invitado');
+
+  constructor() {
+    this.setCurrentUser();
+  }
 
   logout(event: Event) {
     event.preventDefault();
     this.authService.logout();
+  }
+
+  async setCurrentUser() {
+    const email = await this.authService.getUsername();
+    this.username.set(email ?? 'Invitado');
   }
 
   toggleMenu = () => this.menuOpen.update((open) => !open);

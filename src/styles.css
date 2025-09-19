@@ -60,3 +60,12 @@ body {
     scrollbar-color: #9ca3af transparent; /* gray-400 */
   }
 }
+
+:host ::ng-deep .p-datepicker {
+  font-size: 0.75rem; /* text-xs */
+  min-width: 10rem; /* ancho más pequeño */
+}
+
+:host ::ng-deep .p-datepicker .p-datepicker-calendar {
+  font-size: 0.75rem; /* días más pequeños */
+}
