@@ -61,11 +61,17 @@ body {
   }
 }
 
-:host ::ng-deep .p-datepicker {
-  font-size: 0.75rem; /* text-xs */
-  min-width: 10rem; /* ancho más pequeño */
+/* Header Datatable */
+.p-datatable-thead > tr > th.p-datatable-column-sorted {
+  background: inherit !important;
+  color: #09090b !important;
 }
 
-:host ::ng-deep .p-datepicker .p-datepicker-calendar {
-  font-size: 0.75rem; /* días más pequeños */
+.p-datatable-thead > tr > th.p-datatable-column-sorted:hover {
+  background: #f1f5f9 !important;
+  color: #09090b !important;
+}
+
+.p-datatable-thead > tr > th.p-datatable-column-sorted .p-datatable-sort-icon {
+  color: inherit !important;
 }

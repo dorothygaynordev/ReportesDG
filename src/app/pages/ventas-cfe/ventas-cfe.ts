@@ -2,12 +2,14 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCard } from '@shared/components/card/card';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 import { catchError, map, of } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { RequestVentas } from './models/request-ventas.interface';
@@ -26,13 +28,15 @@ import { VentasCfeService } from './ventas-cfe.service';
     InputTextModule,
     TableModule,
     CurrencyPipe,
+    ToastModule,
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, MessageService],
   templateUrl: './ventas-cfe.html',
 })
 export class VentasCfe {
   private ventasService = inject(VentasCfeService);
   private datePipe = inject(DatePipe);
+  private messageService = inject(MessageService);
   findTienda = '';
   rangeDates: Date[] = [];
   public listVentas = signal<IVentasCfe[]>([]);
@@ -61,8 +65,30 @@ export class VentasCfe {
     this.ventasService
       .getVentasCfe(this.filtros())
       .pipe(
-        map((res) => (res.success ? res.data : [])),
+        map((res) => {
+          if (res.success) {
+            if (!res.data || res.data.length === 0) {
+              this.messageService.add({
+                severity: 'info',
+                summary: 'Sin resultados',
+                detail:
+                  res.message ||
+                  'No se encontraron ventas con los filtros aplicados.',
+                life: 3000,
+              });
+              return [];
+            }
+            return res.data;
+          }
+          return [];
+        }),
         catchError((err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al obtener las ventas. Inténtalo de nuevo.',
+            life: 3000,
+          });
           console.error('Error al obtener ventas:', err);
           return of([]);
         }),
@@ -110,13 +136,13 @@ export class VentasCfe {
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excel);
-    // 2. Agregar formato de moneda a la columna "Venta"
+    // Agregar formato de moneda a la columna "Venta"
     const range = XLSX.utils.decode_range(ws['!ref']!);
     for (let row = range.s.r + 1; row <= range.e.r; row++) {
-      const cellRef = XLSX.utils.encode_cell({ r: row, c: 2 }); // columna 2 = "Venta"
+      const cellRef = XLSX.utils.encode_cell({ r: row, c: 2 });
       if (ws[cellRef]) {
-        ws[cellRef].t = 'n'; // tipo number
-        ws[cellRef].z = '"$"#,##0.00'; // formato moneda (ej: $1,234.56)
+        ws[cellRef].t = 'n';
+        ws[cellRef].z = '"$"#,##0.00';
       }
     }
     const wb: XLSX.WorkBook = XLSX.utils.book_new();

@@ -19,7 +19,6 @@
           <p-datepicker
             [(ngModel)]="rangeDates"
             selectionMode="range"
-            [readonlyInput]="true"
             [showButtonBar]="true"
             inputId="on_range"
             showIcon
@@ -35,7 +34,12 @@
             <i class="material-symbols-outlined !text-[20px]">search</i>
           </ng-template>
         </p-button>
-        <p-button label="Exportar" size="small" (onClick)="exportExcel()">
+        <p-button
+          label="Exportar"
+          size="small"
+          severity="success"
+          (onClick)="exportExcel()"
+        >
           <ng-template pTemplate="icon">
             <i class="material-symbols-outlined !text-[20px]">file_export</i>
           </ng-template>
@@ -75,12 +79,34 @@
         stripedRows="true"
         [scrollable]="true"
         scrollHeight="calc(100vh - 150px)"
+        emptyMessage="No se encontraron registros."
       >
         <ng-template #header>
-          <tr class="text-md sticky top-0 z-10">
-            <th>Tienda</th>
-            <th>Fecha</th>
-            <th>Venta</th>
+          <tr class="text-md">
+            <th pSortableColumn="tienda" style="width: 20%">
+              <div class="flex justify-between items-center gap-2">
+                Tienda
+                <p-sortIcon field="tienda"></p-sortIcon>
+                <p-column-filter
+                  type="text"
+                  field="tienda"
+                  display="menu"
+                  class="ml-auto"
+                />
+              </div>
+            </th>
+            <th pSortableColumn="fecha" style="width: 20%">
+              <div class="flex justify-between items-center gap-2">
+                Fecha
+                <p-sortIcon field="fecha"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="venta" style="width: 20%">
+              <div class="flex justify-between items-center gap-2">
+                Venta
+                <p-sortIcon field="venta"></p-sortIcon>
+              </div>
+            </th>
           </tr>
         </ng-template>
         <ng-template #body let-venta>
@@ -94,3 +120,4 @@
     </div>
   </div>
 </app-card>
+<p-toast />

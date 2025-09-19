@@ -20,11 +20,21 @@
         scrollHeight="calc(100vh - 150px)"
       >
         <ng-template #header>
-          <tr class="text-md sticky top-0 z-10">
-            <th>No. Empleado</th>
+          <tr class="text-md">
+            <th pSortableColumn="cedula">
+              <div class="flex items-center gap-2">
+                No. Empleado
+                <p-sortIcon field="cedula"></p-sortIcon>
+              </div>
+            </th>
             <th>Nombre</th>
             <th>Tienda</th>
-            <th>Faltas</th>
+            <th pSortableColumn="faltas">
+              <div class="flex items-center gap-2">
+                Faltas
+                <p-sortIcon field="faltas"></p-sortIcon>
+              </div>
+            </th>
             <th>Días de falta</th>
           </tr>
         </ng-template>
