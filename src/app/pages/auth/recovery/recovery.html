@@ -9,12 +9,6 @@
       <label for="password" class="text-sm text-gray-600 dark:text-gray-200"
         >Email</label
       >
-      <a
-        class="text-sm text-gray-400 hover:text-black hover:underline"
-        routerLink="/auth/login"
-      >
-        Login
-      </a>
     </div>
     <p-iconfield>
       <p-inputicon class="pi pi-user" />
@@ -27,12 +21,22 @@
       />
     </p-iconfield>
   </div>
-  <div class="mt-6">
+  <div class="mt-6 w-full">
     <p-button
       styleClass="w-full"
       label="Recuperar"
       type="submit"
       [disabled]="!recoveryForm.valid"
-    />
+    ></p-button>
+
+    <a
+      class="mt-6 flex items-center justify-center text-sm text-gray-500 hover:text-zinc-950"
+      routerLink="/auth/login"
+    >
+      <!-- Icono -->
+      <i class="material-symbols-rounded !text-[20px] me-1">arrow_back</i>
+      Regresar a login
+    </a>
   </div>
 </form>
+<p-toast />

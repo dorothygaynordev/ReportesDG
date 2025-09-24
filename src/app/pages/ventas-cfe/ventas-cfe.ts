@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCard } from '@shared/components/card/card';
@@ -29,6 +29,7 @@ import { VentasCfeService } from './ventas-cfe.service';
     TableModule,
     CurrencyPipe,
     ToastModule,
+    CommonModule,
   ],
   providers: [DatePipe, MessageService],
   templateUrl: './ventas-cfe.html',
@@ -62,6 +63,16 @@ export class VentasCfe {
   }
 
   getVentas() {
+    const [inicio, fin] = this.rangeDates || [];
+    if (inicio !== null && fin === null) {
+      const fechaInicio = this.transformDate(inicio);
+      const fechaFin = this.transformDate(fin);
+
+      this.updateFiltros({ fechaInicio, fechaFin });
+      this.rangeDates = [inicio, inicio];
+    }
+
+    console.log('Ranges', this.rangeDates);
     this.ventasService
       .getVentasCfe(this.filtros())
       .pipe(
@@ -106,8 +117,8 @@ export class VentasCfe {
     }
 
     const [inicio, fin] = fechaRange;
-    const fechaInicio = this.datePipe.transform(inicio, 'yyyy-MM-dd') ?? '';
-    const fechaFin = this.datePipe.transform(fin, 'yyyy-MM-dd') ?? '';
+    const fechaInicio = this.transformDate(inicio);
+    const fechaFin = this.transformDate(fin);
 
     // Actualizamos los filtros
     this.updateFiltros({ fechaInicio, fechaFin });
@@ -123,6 +134,12 @@ export class VentasCfe {
     this.filtros.update((current) => ({ ...current, ...nuevosFiltros }));
   }
 
+  transformDate(fecha: Date | undefined): string | undefined {
+    return fecha
+      ? (this.datePipe.transform(fecha, 'yyyy-MM-dd') ?? undefined)
+      : undefined;
+  }
+
   private getDiaAnterior() {
     const hoy = new Date();
     hoy.setDate(hoy.getDate() - 1);
@@ -132,18 +149,22 @@ export class VentasCfe {
   exportExcel() {
     const excel = this.listVentas().map((venta) => ({
       Tienda: venta.tienda,
-      Fecha: venta.fecha,
+      Fecha: this.datePipe.transform(
+        new Date(venta.fecha + 'T00:00:00'),
+        'dd/MM/yyyy',
+      ),
       Venta: venta.venta,
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excel);
-    // Agregar formato de moneda a la columna "Venta"
     const range = XLSX.utils.decode_range(ws['!ref']!);
+
     for (let row = range.s.r + 1; row <= range.e.r; row++) {
-      const cellRef = XLSX.utils.encode_cell({ r: row, c: 2 });
-      if (ws[cellRef]) {
-        ws[cellRef].t = 'n';
-        ws[cellRef].z = '"$"#,##0.00';
+      // Columna Venta (C → índice 2)
+      const ventaRef = XLSX.utils.encode_cell({ r: row, c: 2 });
+      if (ws[ventaRef]) {
+        ws[ventaRef].t = 'n';
+        ws[ventaRef].z = '"$"#,##0.00';
       }
     }
     const wb: XLSX.WorkBook = XLSX.utils.book_new();

@@ -73,5 +73,5 @@ body {
 }
 
 .p-datatable-thead > tr > th.p-datatable-column-sorted .p-datatable-sort-icon {
-  color: inherit !important;
+  color: #2979ff !important;
 }

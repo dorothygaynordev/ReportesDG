@@ -1,5 +1,5 @@
 export interface IVentasCfe {
   tienda: string;
-  fecha: string;
+  fecha: Date;
   venta: number;
 }

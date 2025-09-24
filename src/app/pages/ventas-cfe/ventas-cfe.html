@@ -112,7 +112,7 @@
         <ng-template #body let-venta>
           <tr class="text-xs">
             <td class="!py-2">{{ venta.tienda }}</td>
-            <td class="!py-2">{{ venta.fecha }}</td>
+            <td class="!py-2">{{ venta.fecha | date: "dd/MM/yyyy" }}</td>
             <td class="!py-2">{{ venta.venta | currency }}</td>
           </tr>
         </ng-template>
