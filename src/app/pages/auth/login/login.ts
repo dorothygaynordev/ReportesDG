@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RequestLogin } from '@app/core/auth/models/request-login.interface';
 import { AuthService } from '@core/auth/services/auth.service';
 import { LoginService } from '@pages/auth/login/login.service';
@@ -26,6 +26,7 @@ import { lastValueFrom } from 'rxjs';
     MessageModule,
     ReactiveFormsModule,
     NgClass,
+    RouterLink,
   ],
   templateUrl: './login.html',
 })

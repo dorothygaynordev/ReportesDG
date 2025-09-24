@@ -25,13 +25,8 @@ import { RouterOutlet } from '@angular/router';
                   class="w-[250px] mx-auto mb-2"
                 />
               </h2>
-              <p class="text-xl text-gray-700 dark:text-gray-300 font-semibold">
-                Iniciar sesión
-              </p>
             </div>
-            <div class="mt-6">
-              <router-outlet />
-            </div>
+            <router-outlet />
           </div>
         </div>
       </div>

@@ -14,6 +14,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@pages/auth/login/login').then((m) => m.Login),
       },
+      {
+        path: 'recovery',
+        loadComponent: () =>
+          import('@pages/auth/recovery/recovery').then((m) => m.Recovery),
+      },
     ],
   },
   {
@@ -22,7 +27,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { breadcrumb: 'Reportes' },
     children: [
-      { path: '', redirectTo: 'faltas', pathMatch: 'full' },
+      { path: '', redirectTo: 'ventas-cfe', pathMatch: 'full' },
       {
         path: 'faltas',
         loadComponent: () =>

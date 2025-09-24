@@ -1,3 +1,8 @@
+<p
+  class="text-center mb-6 text-xl text-gray-700 dark:text-gray-300 font-semibold"
+>
+  Iniciar sesión
+</p>
 <form [formGroup]="loginForm" (submit)="onSubmit()">
   <div>
     <label
@@ -24,8 +29,8 @@
         >Contraseña</label
       >
       <a
-        href="#"
-        class="text-sm text-gray-400 hover:text-black hover:underline invisible"
+        class="text-sm text-gray-400 hover:text-black hover:underline"
+        routerLink="/auth/recovery"
       >
         Olvidé mi contraseña!
       </a>

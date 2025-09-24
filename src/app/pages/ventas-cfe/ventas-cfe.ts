@@ -82,11 +82,12 @@ export class VentasCfe {
           }
           return [];
         }),
-        catchError((err) => {
+        catchError((err: Error) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Error al obtener las ventas. Inténtalo de nuevo.',
+            detail:
+              err.message || 'Error al obtener las ventas. Inténtalo de nuevo.',
             life: 3000,
           });
           console.error('Error al obtener ventas:', err);
