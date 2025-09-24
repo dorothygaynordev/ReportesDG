@@ -66,13 +66,12 @@ export class VentasCfe {
     const [inicio, fin] = this.rangeDates || [];
     if (inicio !== null && fin === null) {
       const fechaInicio = this.transformDate(inicio);
-      const fechaFin = this.transformDate(fin);
+      const fechaFin = this.transformDate(inicio);
 
       this.updateFiltros({ fechaInicio, fechaFin });
       this.rangeDates = [inicio, inicio];
     }
 
-    console.log('Ranges', this.rangeDates);
     this.ventasService
       .getVentasCfe(this.filtros())
       .pipe(
