@@ -38,9 +38,11 @@ export class VentasCfe {
   private ventasService = inject(VentasCfeService);
   private datePipe = inject(DatePipe);
   private messageService = inject(MessageService);
+
   findTienda = '';
   rangeDates: Date[] = [];
-  public listVentas = signal<IVentasCfe[]>([]);
+  listVentas = signal<IVentasCfe[]>([]);
+  ventaTotal = signal<number>(0);
 
   public filtros = signal<RequestVentas>({
     tienda: '',
@@ -88,6 +90,11 @@ export class VentasCfe {
               });
               return [];
             }
+            const ventaTotal = res.data.reduce(
+              (acc, val) => acc + val.venta,
+              0,
+            );
+            this.ventaTotal.set(ventaTotal);
             return res.data;
           }
           return [];

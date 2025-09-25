@@ -116,6 +116,14 @@
             <td class="!py-2">{{ venta.venta | currency }}</td>
           </tr>
         </ng-template>
+        <ng-template #footer>
+          <tr class="text-sm font-bold">
+            <td colspan="2">Totales</td>
+            <td>
+              {{ ventaTotal() | currency }}
+            </td>
+          </tr>
+        </ng-template>
       </p-table>
     </div>
   </div>

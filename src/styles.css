@@ -33,6 +33,10 @@ body {
   @apply bg-[#BC8246] dark:bg-[#15203c] text-white;
 }
 
+.custom-footer-datatable {
+  @apply !bg-gray-100;
+}
+
 @layer utilities {
   .styled-scrollbar {
     @apply overflow-y-auto; /* mantiene scroll vertical */
