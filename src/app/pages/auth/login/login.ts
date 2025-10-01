@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { RequestLogin } from '@app/core/auth/models/request-login.interface';
 import { AuthService } from '@core/auth/services/auth.service';
 import { LoginService } from '@pages/auth/login/login.service';
+import { Loading } from '@shared/components/loading/loading';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -30,6 +31,7 @@ import { lastValueFrom } from 'rxjs';
     NgClass,
     RouterLink,
     ToastModule,
+    Loading,
   ],
   providers: [MessageService],
   templateUrl: './login.html',
@@ -42,14 +44,11 @@ export class Login {
   private messageService = inject(MessageService);
 
   showPassword = false;
+  loading = false;
 
   loginForm = this.formBuilder.group({
-    email: this.formBuilder.control('', {
-      validators: [Validators.required, Validators.email],
-    }),
-    password: this.formBuilder.control('', {
-      validators: [Validators.required],
-    }),
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
   });
 
   formStatus = toSignal(this.loginForm.statusChanges, {
@@ -68,9 +67,11 @@ export class Login {
           password: this.loginForm.value.password ?? '',
         };
 
+        this.loading = true;
         const data$ = this.loginService.login(request);
         const response = await lastValueFrom(data$);
 
+        this.loading = false;
         if (response.success) {
           await this.authService.saveToken(response.data);
           this.router.navigate(['/reportes']);
@@ -85,6 +86,7 @@ export class Login {
           });
         }
       } catch (error) {
+        this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error de servidor',

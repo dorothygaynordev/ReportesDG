@@ -2,6 +2,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCard } from '@shared/components/card/card';
+import { Loading } from '@shared/components/loading/loading';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -30,6 +31,7 @@ import { VentasCfeService } from './ventas-cfe.service';
     CurrencyPipe,
     ToastModule,
     CommonModule,
+    Loading,
   ],
   providers: [DatePipe, MessageService],
   templateUrl: './ventas-cfe.html',
@@ -88,6 +90,7 @@ export class VentasCfe {
                   'No se encontraron ventas con los filtros aplicados.',
                 life: 3000,
               });
+              this.ventaTotal.set(0);
               return [];
             }
             const ventaTotal = res.data.reduce(

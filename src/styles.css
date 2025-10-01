@@ -30,7 +30,7 @@ body {
 }
 
 .sidebar-menu-btn.active {
-  @apply bg-[#BC8246] dark:bg-[#15203c] text-white;
+  @apply bg-[#bc8246] dark:bg-[#15203c] text-white;
 }
 
 .custom-footer-datatable {

@@ -74,57 +74,79 @@
   <div card-content>
     <!-- <ng-scrollbar class="rounded-b-lg overflow-hidden h-[calc(100vh-157px)]"> -->
     <div class="rounded-b-lg overflow-hidden">
-      <p-table
-        [value]="listVentas()"
-        stripedRows="true"
-        [scrollable]="true"
-        scrollHeight="calc(100vh - 150px)"
-        emptyMessage="No se encontraron registros."
-      >
-        <ng-template #header>
-          <tr class="text-md">
-            <th pSortableColumn="tienda" style="width: 20%">
-              <div class="flex justify-between items-center gap-2">
-                Tienda
-                <p-sortIcon field="tienda"></p-sortIcon>
-                <p-column-filter
-                  type="text"
-                  field="tienda"
-                  display="menu"
-                  class="ml-auto"
-                />
-              </div>
-            </th>
-            <th pSortableColumn="fecha" style="width: 20%">
-              <div class="flex justify-between items-center gap-2">
-                Fecha
-                <p-sortIcon field="fecha"></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="venta" style="width: 20%">
-              <div class="flex justify-between items-center gap-2">
-                Venta
-                <p-sortIcon field="venta"></p-sortIcon>
-              </div>
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-venta>
-          <tr class="text-xs">
-            <td class="!py-2">{{ venta.tienda }}</td>
-            <td class="!py-2">{{ venta.fecha | date: "dd/MM/yyyy" }}</td>
-            <td class="!py-2">{{ venta.venta | currency }}</td>
-          </tr>
-        </ng-template>
-        <ng-template #footer>
-          <tr class="text-sm font-bold">
-            <td colspan="2">Totales</td>
-            <td>
-              {{ ventaTotal() | currency }}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+      @defer (when listVentas().length > 0) {
+        <p-table
+          [value]="listVentas()"
+          stripedRows="true"
+          [scrollable]="true"
+          scrollHeight="calc(100vh - 150px)"
+          emptyMessage="No se encontraron registros."
+        >
+          <ng-template #header>
+            <tr class="text-md">
+              <th pSortableColumn="tienda" style="width: 20%">
+                <div class="flex justify-between items-center gap-2">
+                  Tienda
+                  <p-sortIcon field="tienda"></p-sortIcon>
+                  <p-column-filter
+                    type="text"
+                    field="tienda"
+                    display="menu"
+                    class="ml-auto"
+                  />
+                </div>
+              </th>
+              <th pSortableColumn="fecha" style="width: 20%">
+                <div class="flex justify-between items-center gap-2">
+                  Fecha
+                  <p-sortIcon field="fecha"></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="venta" style="width: 20%">
+                <div class="flex justify-between items-center gap-2">
+                  Venta
+                  <p-sortIcon field="venta"></p-sortIcon>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-venta>
+            <tr class="text-xs">
+              <td class="!py-2">{{ venta.tienda }}</td>
+              <td class="!py-2">{{ venta.fecha | date: "dd/MM/yyyy" }}</td>
+              <td class="!py-2">{{ venta.venta | currency }}</td>
+            </tr>
+          </ng-template>
+          <ng-template #footer>
+            <tr class="text-sm font-bold">
+              <td colspan="2">Totales</td>
+              <td>
+                {{ ventaTotal() | currency }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @placeholder {
+        <app-loading />
+      } @error {
+        <!-- Estado de error -->
+        <div class="flex justify-center items-center h-64">
+          <div class="text-center">
+            <i class="material-symbols-outlined text-6xl text-red-500 mb-4">
+              error
+            </i>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Error al cargar datos
+            </h3>
+            <p class="text-gray-600 mb-4">No se pudieron cargar las ventas</p>
+            <p-button
+              label="Reintentar"
+              icon="refresh"
+              (onClick)="getVentas()"
+            ></p-button>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </app-card>

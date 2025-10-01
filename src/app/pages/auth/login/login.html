@@ -58,10 +58,12 @@
   <div class="mt-6">
     <p-button
       styleClass="w-full"
-      label="Ingresar"
+      [label]="loading ? 'Validando...' : 'Ingresar'"
       type="submit"
       [disabled]="!loginForm.valid"
+      [loading]="loading"
     />
   </div>
 </form>
 <p-toast />
+<!-- <app-loading></app-loading> -->
