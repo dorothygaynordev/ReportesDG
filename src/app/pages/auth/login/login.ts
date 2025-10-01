@@ -6,7 +6,6 @@ import { Router, RouterLink } from '@angular/router';
 import { RequestLogin } from '@app/core/auth/models/request-login.interface';
 import { AuthService } from '@core/auth/services/auth.service';
 import { LoginService } from '@pages/auth/login/login.service';
-import { Loading } from '@shared/components/loading/loading';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -31,7 +30,6 @@ import { lastValueFrom } from 'rxjs';
     NgClass,
     RouterLink,
     ToastModule,
-    Loading,
   ],
   providers: [MessageService],
   templateUrl: './login.html',
