@@ -48,26 +48,18 @@
   <!-- Menu -->
   <div class="flex-1 overflow-y-auto">
     <ul class="flex flex-col pl-0 mb-0 list-none">
-      <!-- <li class="mt-0.5">
-        <a
-          class="sidebar-menu-btn"
-          routerLink="/reportes/faltas"
-          routerLinkActive="active"
-        >
-          <i class="material-symbols-rounded icon-menu-btn">assignment_late</i>
-          <span>Faltas recurrentes</span>
-        </a>
-      </li> -->
-      <li class="mt-0.5">
-        <a
-          class="sidebar-menu-btn"
-          routerLink="/reportes/ventas-cfe"
-          routerLinkActive="active"
-        >
-          <i class="material-symbols-rounded icon-menu-btn">shopping_bag</i>
-          <span>Ventas CFE</span>
-        </a>
-      </li>
+      @for (item of menuService.accessibleMenuItems(); track item.path) {
+        <li class="mt-0.5">
+          <a
+            class="sidebar-menu-btn"
+            [routerLink]="item.path"
+            routerLinkActive="active"
+          >
+            <i class="{{ item.iconClass }} icon-menu-btn">{{ item.icon }}</i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+      }
     </ul>
   </div>
   <hr

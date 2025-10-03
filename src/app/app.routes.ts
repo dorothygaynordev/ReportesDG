@@ -6,6 +6,8 @@ import { Login } from '@pages/auth/login/login';
 import { Recovery } from '@pages/auth/recovery/recovery';
 import { Faltas } from '@pages/faltas/faltas';
 import { VentasCfe } from '@pages/ventas-cfe/ventas-cfe';
+import { roleGuard } from './core/guards/role-guard';
+import { RoleConstants } from './shared/constants/roles';
 
 export const routes: Routes = [
   {
@@ -26,19 +28,31 @@ export const routes: Routes = [
   {
     path: 'reportes',
     component: MainLayout,
-    canActivate: [authGuard],
-    data: { breadcrumb: 'Reportes' },
+    canActivate: [authGuard, roleGuard],
+    data: {
+      breadcrumb: 'Reportes',
+      roles: [
+        RoleConstants.Admin,
+        RoleConstants.Reportes,
+        RoleConstants.Faltas,
+      ],
+    },
     children: [
-      { path: '', redirectTo: 'ventas-cfe', pathMatch: 'full' },
       {
         path: 'faltas',
         component: Faltas,
-        data: { breadcrumb: 'Faltas recurrentes' },
+        data: {
+          breadcrumb: 'Faltas recurrentes',
+          roles: [RoleConstants.Admin, RoleConstants.Faltas],
+        },
       },
       {
         path: 'ventas-cfe',
         component: VentasCfe,
-        data: { breadcrumb: 'Ventas CFE' },
+        data: {
+          breadcrumb: 'Ventas CFE',
+          roles: [RoleConstants.Admin, RoleConstants.Reportes],
+        },
       },
     ],
   },
