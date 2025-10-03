@@ -18,6 +18,7 @@ import { SettingsService } from '@core/services/settings.service';
 import { MyPreset } from '@theme/theme';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
+import { FontLoader } from './core/services/font-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,6 +35,10 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => {
       const settingsService = inject(SettingsService);
       return settingsService.load();
+    }),
+    provideAppInitializer(() => {
+      const fontLoader = inject(FontLoader);
+      return fontLoader.preloadFonts();
     }),
   ],
 };

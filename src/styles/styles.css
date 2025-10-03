@@ -1,7 +1,5 @@
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
-@import "material-symbols/outlined.css";
-@import "material-symbols/rounded.css";
 
 :root {
   font-family: "Inter", sans-serif;

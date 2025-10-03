@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/auth.guard';
 import { MainLayout } from '@app/layouts/main/main-layout';
 import { AuthLayout } from '@layouts/auth-layout';
+import { Login } from '@pages/auth/login/login';
+import { Recovery } from '@pages/auth/recovery/recovery';
+import { Faltas } from '@pages/faltas/faltas';
+import { VentasCfe } from '@pages/ventas-cfe/ventas-cfe';
 
 export const routes: Routes = [
   {
@@ -11,13 +15,11 @@ export const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
         path: 'login',
-        loadComponent: () =>
-          import('@pages/auth/login/login').then((m) => m.Login),
+        component: Login,
       },
       {
         path: 'recovery',
-        loadComponent: () =>
-          import('@pages/auth/recovery/recovery').then((m) => m.Recovery),
+        component: Recovery,
       },
     ],
   },
@@ -30,14 +32,12 @@ export const routes: Routes = [
       { path: '', redirectTo: 'ventas-cfe', pathMatch: 'full' },
       {
         path: 'faltas',
-        loadComponent: () =>
-          import('@pages/faltas/faltas').then((m) => m.Faltas),
+        component: Faltas,
         data: { breadcrumb: 'Faltas recurrentes' },
       },
       {
         path: 'ventas-cfe',
-        loadComponent: () =>
-          import('@pages/ventas-cfe/ventas-cfe').then((m) => m.VentasCfe),
+        component: VentasCfe,
         data: { breadcrumb: 'Ventas CFE' },
       },
     ],

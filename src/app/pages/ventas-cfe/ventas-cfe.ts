@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCard } from '@shared/components/card/card';
 import { Loading } from '@shared/components/loading/loading';
@@ -9,7 +9,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { StyleClassModule } from 'primeng/styleclass';
-import { TableModule } from 'primeng/table';
+import { Table, TableFilterEvent, TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { catchError, map, of } from 'rxjs';
 import * as XLSX from 'xlsx';
@@ -45,6 +45,8 @@ export class VentasCfe {
   rangeDates: Date[] = [];
   listVentas = signal<IVentasCfe[]>([]);
   ventaTotal = signal<number>(0);
+  dataTableVentas = viewChild<Table>('dtVentas');
+  loading = false;
 
   public filtros = signal<RequestVentas>({
     tienda: '',
@@ -76,6 +78,8 @@ export class VentasCfe {
       this.rangeDates = [inicio, inicio];
     }
 
+    this.resetTable();
+    this.loading = true;
     this.ventasService
       .getVentasCfe(this.filtros())
       .pipe(
@@ -115,7 +119,9 @@ export class VentasCfe {
         }),
       )
       .subscribe((ventas) => {
+        this.loading = false;
         this.listVentas.set(ventas);
+        this.recalcularTotal();
       });
   }
 
@@ -179,5 +185,39 @@ export class VentasCfe {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'VentasCFE');
     XLSX.writeFile(wb, `VentasCFE.xlsx`);
+  }
+
+  clearTable() {
+    const table = this.dataTableVentas();
+    if (table) {
+      table.filters = {};
+      this.recalcularTotal();
+    }
+  }
+
+  resetTable() {
+    const table = this.dataTableVentas();
+    if (table) {
+      table.reset();
+      this.recalcularTotal();
+    }
+  }
+
+  onFilter(event: TableFilterEvent) {
+    const datosFiltrados: IVentasCfe[] = (event.filteredValue ||
+      []) as IVentasCfe[];
+    const totalFiltrado = datosFiltrados.reduce(
+      (acc, val) => acc + val.venta,
+      0,
+    );
+    this.ventaTotal.set(totalFiltrado);
+  }
+
+  recalcularTotal() {
+    const total = this.listVentas().reduce(
+      (acc, venta) => acc + venta.venta,
+      0,
+    );
+    this.ventaTotal.set(total);
   }
 }

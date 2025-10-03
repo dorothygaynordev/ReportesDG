@@ -29,9 +29,10 @@
           />
           <label for="on_range">Desde - Hasta</label>
         </p-floatlabel>
-        <p-button size="small" (onClick)="getVentas()">
+        <p-button size="small" (onClick)="getVentas()" [loading]="loading">
           <ng-template pTemplate="icon">
             <i class="material-symbols-outlined !text-[20px]">search</i>
+            <!-- <i class="pi pi-search"></i> -->
           </ng-template>
         </p-button>
         <p-button
@@ -42,6 +43,7 @@
         >
           <ng-template pTemplate="icon">
             <i class="material-symbols-outlined !text-[20px]">file_export</i>
+            <!-- <i class="pi pi-file-export"></i> -->
           </ng-template>
         </p-button>
       </div>
@@ -76,8 +78,10 @@
     <div class="rounded-b-lg overflow-hidden">
       @defer (when listVentas().length > 0) {
         <p-table
+          #dtVentas
           [value]="listVentas()"
           stripedRows="true"
+          (onFilter)="onFilter($event)"
           [scrollable]="true"
           scrollHeight="calc(100vh - 150px)"
           emptyMessage="No se encontraron registros."

@@ -5,7 +5,14 @@ import { AuthService } from '@core/auth/services/auth.service';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
-  template: `<router-outlet></router-outlet>`,
+  template: `
+    <span
+      class="material-symbols-outlined force-font-load"
+      style="display: none"
+      >home</span
+    >
+    <router-outlet></router-outlet>
+  `,
 })
 export class App {
   private authService = inject(AuthService);
