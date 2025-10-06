@@ -3,28 +3,42 @@
     @for (
       breadcrumb of breadcrumbService.breadcrumbs;
       track breadcrumb;
-      let last = $last
+      let last = $last;
+      let index = $index
     ) {
       <li
         class="inline-flex items-center"
         [attr.aria-current]="last ? 'page' : null"
       >
-        <!-- Si no es el último, es link -->
-        @if (!last) {
+        @if (!last && breadcrumb.url && !isParentRoute(breadcrumb.url)) {
           <a
             [routerLink]="breadcrumb.url"
-            class="flex items-center text-sm text-gray-500 hover:text-gray-700 focus:outline-hidden"
+            class="flex items-center text-sm text-gray-500 hover:text-gray-700 focus:outline-hidden transition-colors duration-200"
+          >
+            {{ breadcrumb.label }}
+          </a>
+        } @else if (last && breadcrumb.url && !isParentRoute(breadcrumb.url)) {
+          <!-- ÚLTIMO ITEM con URL: también clickeable -->
+          <a
+            [routerLink]="breadcrumb.url"
+            class="text-sm font-semibold text-gray-800 truncate hover:text-gray-600 focus:outline-hidden transition-colors duration-200"
           >
             {{ breadcrumb.label }}
           </a>
         } @else {
-          <!-- Si es el último, es texto -->
-          <span class="text-sm font-semibold text-gray-800 truncate">
+          <!-- Para padres y items sin URL - siempre texto -->
+          <span
+            [class]="
+              last
+                ? 'text-sm font-semibold text-gray-800 truncate'
+                : 'flex items-center text-sm text-gray-500 cursor-default'
+            "
+          >
             {{ breadcrumb.label }}
           </span>
         }
 
-        <!-- Separador (solo si no es el último) -->
+        <!-- Separador -->
         @if (!last) {
           <svg
             class="shrink-0 mx-2 size-4 text-gray-400"
