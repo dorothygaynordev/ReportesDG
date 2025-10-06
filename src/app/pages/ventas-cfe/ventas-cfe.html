@@ -29,7 +29,7 @@
           />
           <label for="on_range">Desde - Hasta</label>
         </p-floatlabel>
-        <p-button size="small" (onClick)="getVentas()" [loading]="loading">
+        <p-button size="small" (onClick)="getVentas()" [loading]="loading()">
           <ng-template pTemplate="icon">
             <i class="material-symbols-outlined !text-[20px]">search</i>
             <!-- <i class="pi pi-search"></i> -->
@@ -76,7 +76,9 @@
   <div card-content>
     <!-- <ng-scrollbar class="rounded-b-lg overflow-hidden h-[calc(100vh-157px)]"> -->
     <div class="rounded-b-lg overflow-hidden">
-      @defer (when listVentas().length > 0) {
+      @if (loading()) {
+        <app-loading />
+      } @else {
         <p-table
           #dtVentas
           [value]="listVentas()"
@@ -130,26 +132,6 @@
             </tr>
           </ng-template>
         </p-table>
-      } @placeholder {
-        <app-loading />
-      } @error {
-        <!-- Estado de error -->
-        <div class="flex justify-center items-center h-64">
-          <div class="text-center">
-            <i class="material-symbols-outlined text-6xl text-red-500 mb-4">
-              error
-            </i>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">
-              Error al cargar datos
-            </h3>
-            <p class="text-gray-600 mb-4">No se pudieron cargar las ventas</p>
-            <p-button
-              label="Reintentar"
-              icon="refresh"
-              (onClick)="getVentas()"
-            ></p-button>
-          </div>
-        </div>
       }
     </div>
   </div>

@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { StyleClassModule } from 'primeng/styleclass';
 import { Table, TableFilterEvent, TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import { catchError, map, of } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { RequestVentas } from './models/request-ventas.interface';
 import { IVentasCfe } from './models/vantas-cfe.interface';
@@ -46,7 +46,7 @@ export class VentasCfe {
   listVentas = signal<IVentasCfe[]>([]);
   ventaTotal = signal<number>(0);
   dataTableVentas = viewChild<Table>('dtVentas');
-  loading = false;
+  loading = signal(false);
 
   public filtros = signal<RequestVentas>({
     tienda: '',
@@ -68,61 +68,49 @@ export class VentasCfe {
     this.getVentas();
   }
 
-  getVentas() {
-    const [inicio, fin] = this.rangeDates || [];
-    if (inicio !== null && fin === null) {
-      const fechaInicio = this.transformDate(inicio);
-      const fechaFin = this.transformDate(inicio);
+  async getVentas() {
+    try {
+      const [inicio, fin] = this.rangeDates || [];
+      if (inicio !== null && fin === null) {
+        const fechaInicio = this.transformDate(inicio);
+        const fechaFin = this.transformDate(inicio);
 
-      this.updateFiltros({ fechaInicio, fechaFin });
-      this.rangeDates = [inicio, inicio];
-    }
+        this.updateFiltros({ fechaInicio, fechaFin });
+        this.rangeDates = [inicio, inicio];
+      }
 
-    this.resetTable();
-    this.loading = true;
-    this.ventasService
-      .getVentasCfe(this.filtros())
-      .pipe(
-        map((res) => {
-          if (res.success) {
-            if (!res.data || res.data.length === 0) {
-              this.messageService.add({
-                severity: 'info',
-                summary: 'Sin resultados',
-                detail:
-                  res.message ||
-                  'No se encontraron ventas con los filtros aplicados.',
-                life: 3000,
-              });
-              this.ventaTotal.set(0);
-              return [];
-            }
-            const ventaTotal = res.data.reduce(
-              (acc, val) => acc + val.venta,
-              0,
-            );
-            this.ventaTotal.set(ventaTotal);
-            return res.data;
-          }
-          return [];
-        }),
-        catchError((err: Error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail:
-              err.message || 'Error al obtener las ventas. Inténtalo de nuevo.',
-            life: 3000,
-          });
-          console.error('Error al obtener ventas:', err);
-          return of([]);
-        }),
-      )
-      .subscribe((ventas) => {
-        this.loading = false;
-        this.listVentas.set(ventas);
+      this.resetTable();
+      this.loading.set(true);
+
+      const ventas$ = this.ventasService.getVentasCfe(this.filtros());
+      const response = await lastValueFrom(ventas$);
+
+      this.loading.set(false);
+      if (response.success && (!response.data || response.data.length === 0)) {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Sin resultados',
+          detail:
+            response.message ||
+            'No se encontraron ventas con los filtros aplicados.',
+          life: 3000,
+        });
+        this.listVentas.set([]);
+        this.ventaTotal.set(0);
+      } else {
+        this.listVentas.set(response.data);
         this.recalcularTotal();
+      }
+    } catch (error) {
+      this.loading.set(false);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error de servidor',
+        detail: 'Ocurrió un error inesperado. Intente nuevamente más tarde.',
+        life: 3000,
       });
+      console.error('Error al obtener ventas:', error);
+    }
   }
 
   changeFecha(fechaRange: Date[]) {
