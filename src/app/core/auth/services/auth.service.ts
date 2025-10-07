@@ -112,8 +112,6 @@ export class AuthService {
         roleIds.push(...payload.roleIds.map((id: string) => id.toString()));
       }
 
-      console.log('Roles extraídos del token:', roleIds); // Para debugging
-
       return { user, roleIds };
     } catch (error) {
       console.error('Invalid token:', error);
@@ -133,7 +131,6 @@ export class AuthService {
       this.currentUser.set(user);
       this.isLoggedIn.set(true);
       this.userRoleIds.set(roleIds);
-      console.log('Usuario cargado con roles:', roleIds); // Para debugging
     } else {
       this.clearAuthState();
     }

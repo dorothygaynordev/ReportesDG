@@ -13,49 +13,53 @@
   <div card-content>
     <!-- <ng-scrollbar class="rounded-b-lg overflow-hidden h-[calc(100vh-157px)]"> -->
     <div class="rounded-b-lg overflow-hidden">
-      <p-table
-        [value]="listFaltas()"
-        stripedRows="true"
-        [scrollable]="true"
-        scrollHeight="calc(100vh - 150px)"
-      >
-        <ng-template #header>
-          <tr class="text-md">
-            <th pSortableColumn="cedula">
-              <div class="flex items-center gap-2">
-                No. Empleado
-                <p-sortIcon field="cedula"></p-sortIcon>
-              </div>
-            </th>
-            <th>Nombre</th>
-            <th>Tienda</th>
-            <th pSortableColumn="faltas">
-              <div class="flex items-center gap-2">
-                Faltas
-                <p-sortIcon field="faltas"></p-sortIcon>
-              </div>
-            </th>
-            <th>Días de falta</th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-falta>
-          <tr class="text-xs">
-            <td class="!py-2">{{ falta.cedula }}</td>
-            <td class="!py-2">{{ falta.nombre }}</td>
-            <td class="!py-2">{{ falta.claveTienda }}</td>
-            <td class="!py-2">{{ falta.total }}</td>
-            <td class="!py-2">
-              <ul class="max-h-16 overflow-y-auto styled-scrollbar">
-                @for (fecha of falta.faltas; track fecha.key) {
-                  <li class="py-0.5">
-                    {{ fecha.fechaFalta }}
-                  </li>
-                }
-              </ul>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+      @if (loading()) {
+        <app-loading />
+      } @else {
+        <p-table
+          [value]="listFaltas()"
+          stripedRows="true"
+          [scrollable]="true"
+          scrollHeight="calc(100vh - 150px)"
+        >
+          <ng-template #header>
+            <tr class="text-md">
+              <th pSortableColumn="cedula">
+                <div class="flex items-center gap-2">
+                  No. Empleado
+                  <p-sortIcon field="cedula"></p-sortIcon>
+                </div>
+              </th>
+              <th>Nombre</th>
+              <th>Tienda</th>
+              <th pSortableColumn="faltas">
+                <div class="flex items-center gap-2">
+                  Faltas
+                  <p-sortIcon field="faltas"></p-sortIcon>
+                </div>
+              </th>
+              <th>Días de falta</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-falta>
+            <tr class="text-xs">
+              <td class="!py-2">{{ falta.cedula }}</td>
+              <td class="!py-2">{{ falta.nombre }}</td>
+              <td class="!py-2">{{ falta.claveTienda }}</td>
+              <td class="!py-2">{{ falta.total }}</td>
+              <td class="!py-2">
+                <ul class="max-h-16 overflow-y-auto styled-scrollbar">
+                  @for (fecha of falta.faltas; track fecha.key) {
+                    <li class="py-0.5">
+                      {{ fecha.fechaFalta }}
+                    </li>
+                  }
+                </ul>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
     </div>
     <!-- </ng-scrollbar> -->
   </div>

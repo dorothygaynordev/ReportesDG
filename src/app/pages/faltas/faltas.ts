@@ -1,12 +1,14 @@
-import { Component, inject, Signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, signal } from '@angular/core';
 import { AppCard } from '@shared/components/card/card';
+import { Loading } from '@shared/components/loading/loading';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
-import { catchError, map, of } from 'rxjs';
+import { ToastModule } from 'primeng/toast';
+import { lastValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { FaltasService } from './faltas.service';
 import { EmpleadoFaltas } from './models/empleado-faltas';
@@ -20,22 +22,53 @@ import { EmpleadoFaltas } from './models/empleado-faltas';
     ListboxModule,
     AppCard,
     NgScrollbarModule,
+    ToastModule,
+    Loading,
   ],
+  providers: [MessageService],
   templateUrl: './faltas.html',
 })
 export class Faltas {
   private faltasService = inject(FaltasService);
+  private messageService = inject(MessageService);
+  listFaltas = signal<EmpleadoFaltas[]>([]);
+  loading = signal(false);
 
-  public listFaltas: Signal<EmpleadoFaltas[]> = toSignal(
-    this.faltasService.getFaltas().pipe(
-      map((response) => (response.success ? response.data : [])),
-      catchError((err) => {
-        console.log('Error al obtener faltas:', err);
-        return of([]);
-      }),
-    ),
-    { initialValue: [] },
-  );
+  // public listFaltas: Signal<EmpleadoFaltas[]> = toSignal(
+  //   this.faltasService.getFaltas().pipe(
+  //     map((response) => (response.success ? response.data : [])),
+  //     catchError((err) => {
+  //       console.log('Error al obtener faltas:', err);
+  //       return of([]);
+  //     }),
+  //   ),
+  //   { initialValue: [] },
+  // );
+  constructor() {
+    this.getFaltas();
+  }
+
+  async getFaltas() {
+    try {
+      this.loading.set(true);
+      const faltas$ = this.faltasService.getFaltas();
+      const response = await lastValueFrom(faltas$);
+
+      this.loading.set(false);
+      if (response.success) {
+        this.listFaltas.set(response.data);
+      }
+    } catch (error) {
+      this.loading.set(false);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error de servidor',
+        detail: 'Ocurrió un error inesperado. Intente nuevamente más tarde.',
+        life: 3000,
+      });
+      console.error('Error al obtener ventas:', error);
+    }
+  }
 
   exportExcel() {
     const excel = this.listFaltas().map((falta) => ({
