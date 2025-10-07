@@ -34,16 +34,6 @@ export class Faltas {
   listFaltas = signal<EmpleadoFaltas[]>([]);
   loading = signal(false);
 
-  // public listFaltas: Signal<EmpleadoFaltas[]> = toSignal(
-  //   this.faltasService.getFaltas().pipe(
-  //     map((response) => (response.success ? response.data : [])),
-  //     catchError((err) => {
-  //       console.log('Error al obtener faltas:', err);
-  //       return of([]);
-  //     }),
-  //   ),
-  //   { initialValue: [] },
-  // );
   constructor() {
     this.getFaltas();
   }
