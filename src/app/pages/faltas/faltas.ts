@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { AppCard } from '@shared/components/card/card';
-import { Loading } from '@shared/components/loading/loading';
+import { LoadingDg } from '@shared/components/loading-dg/loading-dg';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -23,7 +23,7 @@ import { EmpleadoFaltas } from './models/empleado-faltas';
     AppCard,
     NgScrollbarModule,
     ToastModule,
-    Loading,
+    LoadingDg,
   ],
   providers: [MessageService],
   templateUrl: './faltas.html',

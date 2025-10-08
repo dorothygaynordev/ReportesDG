@@ -28,7 +28,6 @@
             ],
             "styles": [
               "src/styles/material-symbols.css",
-              "public/fonts/material-symbols/material-symbols.css",
               "src/styles/styles.css"
             ]
           },

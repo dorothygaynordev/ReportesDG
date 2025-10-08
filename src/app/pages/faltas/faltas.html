@@ -4,7 +4,12 @@
     card-header
   >
     <h2 class="text-lg font-semibold">Faltas recurrentes</h2>
-    <p-button label="Exportar" size="small" (onClick)="exportExcel()">
+    <p-button
+      label="Exportar"
+      size="small"
+      (onClick)="exportExcel()"
+      [disabled]="listFaltas().length === 0"
+    >
       <ng-template pTemplate="icon">
         <i class="material-symbols-outlined !text-[20px]">file_export</i>
       </ng-template>
@@ -14,7 +19,8 @@
     <!-- <ng-scrollbar class="rounded-b-lg overflow-hidden h-[calc(100vh-157px)]"> -->
     <div class="rounded-b-lg overflow-hidden">
       @if (loading()) {
-        <app-loading />
+        <!-- <app-loading /> -->
+        <app-loading-dg />
       } @else {
         <p-table
           [value]="listFaltas()"
