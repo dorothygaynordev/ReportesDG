@@ -15,20 +15,13 @@ export class AuthService {
   private settings = inject(SettingsService);
   private router = inject(Router);
 
-  constructor() {
-    this.loadUserFromToken();
-  }
-
   // Computed signals para verificación de roles
   public readonly roleIds = computed(() => this.userRoleIds());
-
-  // Computed signals para roles específicos
   public readonly isAdmin = computed(() => this.hasRole(RoleConstants.Admin));
   public readonly isReportes = computed(() =>
     this.hasRole(RoleConstants.Reportes),
   );
   public readonly isFaltas = computed(() => this.hasRole(RoleConstants.Faltas));
-
   public readonly canSupervise = computed(() =>
     this.hasAnyRole([
       RoleConstants.Admin,
@@ -142,7 +135,7 @@ export class AuthService {
     this.userRoleIds.set([]);
   }
 
-  // Métodos para verificación de roles (ahora con strings)
+  // Métodos para verificación de roles
   hasRole(roleId: string | string[]): boolean {
     const roleIds = this.userRoleIds();
     if (!roleIds.length) return false;
@@ -209,5 +202,18 @@ export class AuthService {
       console.error('Error decoding token:', error);
       return null;
     }
+  }
+
+  isAuthenticated(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const isValid = this.isTokenValid();
+
+    if (isValid && !this.currentUser()) {
+      this.loadUserFromToken();
+    }
+
+    return isValid;
   }
 }

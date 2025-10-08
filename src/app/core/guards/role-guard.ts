@@ -16,7 +16,8 @@ export const roleGuard: CanActivateFn = (
   const menuService = inject(MenuSidebar);
   const router = inject(Router);
 
-  if (!authService.isLoggedIn()) {
+  if (!authService.isAuthenticated()) {
+    router.navigate(['/auth/login']);
     return false;
   }
 
@@ -36,15 +37,21 @@ export const roleGuard: CanActivateFn = (
   }
 
   // REDIRECCIÓN PARA RUTAS PADRE VACÍAS
-  // Si estamos en una ruta como '/reportes' (sin hijos en la URL)
   if (shouldRedirectToFirstChild(route, state)) {
     const firstAccessibleItem = menuService.getFirstAccessibleItem();
 
-    if (firstAccessibleItem && firstAccessibleItem.path !== state.url) {
-      router.navigate([firstAccessibleItem.path]);
-      return false;
+    if (firstAccessibleItem) {
+      // ✅ MEJORA: Evita redirección infinita verificando si ya estamos en la ruta
+      if (
+        firstAccessibleItem.path !== state.url &&
+        !state.url.startsWith(firstAccessibleItem.path + '/')
+      ) {
+        router.navigate([firstAccessibleItem.path]);
+        return false;
+      }
     } else {
-      console.log('⚠️ No se encontró ningún hijo accesible');
+      router.navigate(['/access-denied']);
+      return false;
     }
   }
 
@@ -56,19 +63,16 @@ function shouldRedirectToFirstChild(
   state: RouterStateSnapshot,
 ): boolean {
   const url = state.url;
+  const routePath = route.routeConfig?.path;
 
-  // Caso 1: Ruta exacta como '/reportes' (sin slash final)
-  if (url === `/${route.routeConfig?.path}`) {
-    return true;
-  }
+  if (!routePath) return false;
 
-  // Caso 2: Ruta con slash final como '/reportes/'
-  if (url === `/${route.routeConfig?.path}/`) {
-    return true;
-  }
+  // Normaliza las rutas removiendo slashes finales
+  const normalizedUrl = url.replace(/\/$/, '');
+  const normalizedPath = `/${routePath}`.replace(/\/$/, '');
 
-  // Caso 3: No hay child routes activas
-  if (!route.firstChild) {
+  // Verifica si estamos en la ruta padre sin hijos
+  if (normalizedUrl === normalizedPath && !route.firstChild) {
     return true;
   }
 
